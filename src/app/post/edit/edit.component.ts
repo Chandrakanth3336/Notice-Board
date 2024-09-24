@@ -3,17 +3,24 @@ import { PostService } from '../post.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from '../post';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
+
+import { Observable } from 'rxjs';
+import { CanComponentDeactivate } from 'src/app/unsaved-data.guard';
      
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
-export class EditComponent implements OnInit {
-      
+export class EditComponent implements OnInit , CanComponentDeactivate  {
+
+  public isFormDirty:boolean=false;
+
+
   id!: number;
   post!: Post;
   form!: FormGroup;
+  
     
   /*------------------------------------------
   --------------------------------------------
@@ -51,12 +58,25 @@ export class EditComponent implements OnInit {
             body:this.post.body
           });
         });
-      })
-   
-      
-   
+      });
+
+      this.form.valueChanges.subscribe(()=>{
+        this.isFormDirty=true
+  })
   }
-    
+
+ canDeactivate(): boolean{
+  if(this.isFormDirty){
+    return window.confirm("form has unsaved Changes. Do you really want to go back?");
+  }
+  else{
+    return true;
+  }
+}
+ 
+
+
+
   /**
    * Write code on Method
    *
@@ -74,17 +94,13 @@ export class EditComponent implements OnInit {
    */
 
   submit(){
+    this.isFormDirty=false;
     if(this.id){
     console.log(this.form.value);
     this.postService.update(this.id, this.form.value).subscribe((res:any) => {
          console.log('Post updated successfully!');
-        //  this.form.patchValue({
-        //   title:res.title,
-        //   body:res.body
-        //  })
          this.router.navigateByUrl('post/index');
-        //  console.log('6');
-    })
+    });
   }
 }
    

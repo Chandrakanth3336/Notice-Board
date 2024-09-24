@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-     
-import {  Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-  
 import { Post } from './post';
-  
+
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  
-  private apiURL = "https://jsonplaceholder.typicode.com";
-    
+
+  private apiURL = "http://localhost:3000/api/posts";
+
   /*------------------------------------------
   --------------------------------------------
   Http Header Options
@@ -23,95 +21,52 @@ export class PostService {
       'Content-Type': 'application/json'
     })
   }
-   
+
   /*------------------------------------------
   --------------------------------------------
   Created constructor
   --------------------------------------------
   --------------------------------------------*/
   constructor(private httpClient: HttpClient) { }
-    
-  /**
-   * Write code on Method
-   *
-   * @return response()
-   */
-  getAll(): Observable<any> {
-    console.log("Fetching posts...");
-    return this.httpClient.get(this.apiURL + '/posts/')
-  
-    .pipe(
-      catchError(this.errorHandler)
-    )
+
+  // Fetch all posts
+  getAll(): Observable<Post[]> {
+    return this.httpClient.get<Post[]>(this.apiURL)
+      .pipe(catchError(this.errorHandler));
   }
-    
-  /**
-   * Write code on Method
-   *
-   * @return response()
-   */
-  create(post:Post): Observable<any> {
-  
-    return this.httpClient.post(this.apiURL + '/posts/', JSON.stringify(post), this.httpOptions)
-  
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }  
-    
-  /**
-   * Write code on Method
-   *
-   * @return response()
-   */
-  find(id:number): Observable<any> {
-  
-    return this.httpClient.get(this.apiURL + '/posts/' + id)
-  
-    .pipe(
-      catchError(this.errorHandler)
-    )
+
+  // Create a new post
+  create(post: Post): Observable<Post> {
+    return this.httpClient.post<Post>(this.apiURL, post, this.httpOptions)
+      .pipe(catchError(this.errorHandler));
   }
-    
-  /**
-   * Write code on Method
-   *
-   * @return response()
-   */
-  update(id:number, post:Post): Observable<any> {
-  
-    return this.httpClient.put(this.apiURL + '/posts/' + id, JSON.stringify(post), this.httpOptions)
- 
-    .pipe( 
-      catchError(this.errorHandler)
-    )
+
+  // Find a post by ID
+  find(id: number): Observable<Post> {
+    return this.httpClient.get<Post>(this.apiURL+ '/' +id)
+      .pipe(catchError(this.errorHandler));
   }
-       
-  /**
-   * Write code on Method
-   *
-   * @return response()
-   */
-  delete(id:number){
-    return this.httpClient.delete(this.apiURL + '/posts/' + id, this.httpOptions)
-  
-    .pipe(
-      catchError(this.errorHandler)
-    )
+
+  // Update a post
+  update(id: number, post: Post): Observable<Post> {
+    return this.httpClient.put<Post>(this.apiURL+ '/' +id, post, this.httpOptions)
+      .pipe(catchError(this.errorHandler));
+  } 
+
+  // Delete a post
+  delete(id: number): Observable<void> {
+    return this.httpClient.delete<void>(this.apiURL+ '/' +id, this.httpOptions)
+      .pipe(catchError(this.errorHandler));
   }
-      
-  /** 
-   * Write code on Method
-   *
-   * @return response()
-   */
-  errorHandler(error:any) {
+
+  // Error handler
+  errorHandler(error: any) {
     let errorMessage = '';
-    if(error.error instanceof ErrorEvent) {
+    if (error.error instanceof ErrorEvent) {
       errorMessage = error.error.message;
     } else {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(errorMessage);
- }
+  }
 }

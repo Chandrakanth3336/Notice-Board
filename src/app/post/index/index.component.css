@@ -1,0 +1,24 @@
+ .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    text-decoration: none;
+    font-size: 40px;
+  }
+  .time-display {
+    font-size: 20px;
+    color: white;
+    
+  }
+  .sticky-top {
+    z-index: 1000; 
+  }
+  /* Nested Selectors or Sass or Less */
+ .table-hover{
+    tbody {
+        tr:hover{
+            background-color: lightgrey;
+            cursor: pointer;
+         }
+    }
+ }

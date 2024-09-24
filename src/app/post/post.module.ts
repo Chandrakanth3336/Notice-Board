@@ -6,17 +6,27 @@ import { IndexComponent } from './index/index.component';
 import { ViewComponent } from './view/view.component';
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
+
   
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-  
+import { HttpClientModule } from '@angular/common/http';
+import { CamelCasePipe } from '../camel-case.pipe';
+
 @NgModule({
-  declarations: [IndexComponent, ViewComponent, CreateComponent, EditComponent],
+  declarations: [
+    IndexComponent, 
+    ViewComponent, 
+    CreateComponent, 
+    EditComponent,
+    CamelCasePipe
+  ],
+
   imports: [
     CommonModule,
     PostRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     
   ]
 })

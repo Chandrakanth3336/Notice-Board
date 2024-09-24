@@ -33,16 +33,15 @@ export class ViewComponent implements OnInit {
     // this.id = +this.route.snapshot.params['id'];
         this.route.params.subscribe((data:any)=>{
           this.id=data.id;
-        })
-    this.postService.find(this.id).subscribe(
+        
+    this.postService.find(data.id).subscribe(
       (data: Post)=>{
        this.post=data;
     },
     (error)=>{
       console.log("Error Fetching post",error);
-    }
-  );
-    
-  }
-    
+    });
+  });
+
+  }  
 }
